@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, Picker, Switch, RefreshControl, ToastAndroid, 
   AsyncStorage, TextInput, Button, DeviceEventEmitter, TouchableOpacity, Image, WebView } from 'react-native';
 import {BdMap,  Panorama} from 'baidu-map-for-react-native';
-import Conf from './Config';
+import Conf from '../../common/config';
 import Icon from 'react-native-vector-icons/EvilIcons';
 
-import { List } from './List';
-import Menu from './Menu.android';
+import { List } from './list';
+import Menu from './menu';
 import { NavigationActions } from 'react-navigation';
 
 let tmpTitle = '';

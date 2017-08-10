@@ -30,7 +30,7 @@
       android:theme="@style/AppTheme">
         <meta-data
                 android:name="com.baidu.lbsapi.API_KEY"
-                android:value="AxzMwsbOrnK4KDA7svcFwQnaR1dWQTWX" />
+                android:value="xOWWNpnZcIy7Nj0fjeSH78PNwFjxdcEl" />
 
         <meta-data
                 android:name="TencentMapSDK"
