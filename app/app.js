@@ -12,7 +12,7 @@ import Login from './containers/login';
 import Search from './containers/search';
 import Pano from './containers/pano';
 
-const Home = StackNavigator({
+const App = StackNavigator({
     Main: { screen: Main },
     Detail: { screen: Detail },
     Web: { screen: Web },
@@ -22,4 +22,4 @@ const Home = StackNavigator({
     Pano: { screen: Pano },
 });
 
-export default Home;
+export default App;
