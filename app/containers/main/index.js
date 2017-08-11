@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import { List } from './list';
 import Menu from './menu';
 import { NavigationActions } from 'react-navigation';
+import BaiduMap from './map';
 
 let tmpTitle = '';
 
@@ -26,7 +27,7 @@ export default class App extends React.Component {
       isPanoramaPass: false,
       selectionProject: null,
       isRefreshing: false,
-      isSatellite: params && typeof params.isSatellite === 'boolean' ? params.isSatellite : false,
+      // isSatellite: params && typeof params.isSatellite === 'boolean' ? params.isSatellite : false,
       marker: [],
       token: '',
       zoom: 13,
@@ -65,7 +66,7 @@ export default class App extends React.Component {
       headerStyle:  Conf.NAV_HEADER_STYLE,
       headerTitleStyle: Conf.NAV_HEADER_TITLE_STYLE
     }
-  }
+  };
 
   async checkToken() {
     let token = '';
@@ -91,8 +92,8 @@ export default class App extends React.Component {
     }
   }
 
-  getMenus() {
-    fetch('http://116.62.113.227:3000/api/getMenus', { headers: this.headers })
+  getMenus = () => {
+    fetch(`${Conf.url}/api/getMenus`, { headers: this.headers })
       .then(response => response.json())
       .then((res) => {
         this.setState({
@@ -114,12 +115,12 @@ export default class App extends React.Component {
       .catch((e) => {
         ToastAndroid.show('请求错误:' + e.message, ToastAndroid.SHORT);
       });
-  }
+  };
 
-  getProjects(type) {
+  getProjects = (type) => {
     const { params } = this.props.navigation.state;
     
-    fetch('http://116.62.113.227:3000/api/getProjectsByType?type=' + type, { headers: this.headers })
+    fetch(`${Conf.url}/api/getProjectsByType?type=${type}` , { headers: this.headers })
       .then((response) => response.json())
       .then((res) => {
         if (!this.state.searchValue) {
@@ -230,7 +231,7 @@ export default class App extends React.Component {
         title: '搜索项目',
         list: this.cacheData.rows.map(item => item.name),
         isMap: this.state.isMap,
-        isSatellite: this.state.isSatellite
+        // isSatellite: this.state.isSatellite
       });
     }
   }
@@ -356,16 +357,11 @@ export default class App extends React.Component {
         </View>
 
         <View style={{ flex: 1 }}>
-          { this.state.isMap ? <View style={{ flex: 1 }}>
-            <BdMap
-              style={{ flex: 1, width: '100%', height: '100%', position: this.state.panoramaLeft ? 'relative' : 'absolute', left: this.state.panoramaLeft ? 0 : 999999, top: 0 }}
-              zoom={ this.state.zoom }
-              center={this.state.center}
-              marker={this.state.marker} 
-              satellite={this.state.isSatellite}
-            />
-
-          </View> : <ScrollView
+          { this.state.isMap ?
+              <BaiduMap
+                  {...this.props}
+                  {...this.state}
+              />: <ScrollView
                 style={{ flex: 1 }}
                 refreshControl={
                   <RefreshControl
@@ -378,7 +374,7 @@ export default class App extends React.Component {
             <List
               selectItem={(item) => navigate('Web', { 
                 title: item.name,
-                url: `http://116.62.113.227:3000/detail/${item.id}`
+                url: `${Conf.url}/detail/${item.id}`
               })}
               header={this.state.gridData.header}
               rows={this.state.gridData.rows} 
@@ -442,26 +438,15 @@ export default class App extends React.Component {
              />
             <Icon name="location" color={Conf.BASE_COLOR} style={{ fontSize: 20 }} onPress={() => this.setDisplayModel(true)} />
           </View>
-          {this.state.isMap && <View style={{ width: 120, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRightColor: '#CCC', borderRightWidth: 1 }}>
-            <View style={ styles.mapToolsSwitch }>
-              <Text onPress={ () => {this.state.token && this.setState({isSatellite: false})}}>普通</Text>
-              <Switch
-                disabled={!this.state.token}
-                onValueChange={(isSatellite) => this.setState({isSatellite})} value={this.state.isSatellite}
-              />
-              <Text onPress={ () => {this.state.token && this.setState({isSatellite: true})}}>卫星</Text>
-            </View>
-          </View>}
           <View style={{ flex: 1 }}>
             <Menu
               onChart={() => this.goScreen('Web', { 
                 title: '项目建设分析',
                 url: `http://116.62.113.227:3000/charts`
               })}
-
               onUser={() => this.goScreen('User', { title: '用户中心' })}
               onLogin={() => this.goScreen('Login', { title: '系统登陆' })}
-            ></Menu>
+            />
           </View>
         </View>}
       </View>

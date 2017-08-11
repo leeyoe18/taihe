@@ -1,9 +1,6 @@
 /**
  * Created by yoe on 2017/8/10.
  */
-/**
- * Created by yoe on 2017/6/20.
- */
 import React, {
     Component,
     PropTypes

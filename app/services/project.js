@@ -1,8 +1,8 @@
 /**
  * Created by yoe on 2017/6/22.
  */
-import config from '../common/html';
-const ip = config.html + '/api/';
+import config from '../common/config';
+const ip = config.url + '/api/';
 export function get(url,params,callback){
     url = ip + url;
     if (params) {

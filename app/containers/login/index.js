@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import Conf from '../../common/config';
 import { NavigationActions } from 'react-navigation';
-import { html } from '../../common/html';
 
 export default class Login extends Component {
 
@@ -44,7 +43,7 @@ export default class Login extends Component {
   login() {
     if (this.state.userName && this.state.userPass) {
       this.setState({disabled: true});
-        fetch(`${html}/cms/v1/login`, {
+        fetch(`${Conf.url}/cms/v1/login`, {
           method: 'POST', 
           headers: {
             'Content-Type': 'application/json'

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, WebView, Picker, Switch } from 'react-native';
 import Conf from '../../common/config';
-import { html } from '../../common/html';
 
 export default class Detail extends Component {
 
@@ -17,7 +16,7 @@ export default class Detail extends Component {
 
     return (
       <WebView
-        source={{uri: `${html}/${params.id}`}}
+        source={{uri: `${Conf.url}/${params.id}`}}
         style={{ width: '100%' }}
       >
       </WebView>

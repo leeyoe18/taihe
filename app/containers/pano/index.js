@@ -30,7 +30,7 @@ export default class Pano extends Component {
 
     return  (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: 'red' }}></View>
+        <View style={{ flex: 1, backgroundColor: 'red' }}/>
         <Panorama
           style={{ width: '100%', height: '100%', position: 'absolute', left: '50%', top: 0, backgroundColor: 'white', zIndex: 99999 }}
           location={{ long: params.long, lat: params.lat }}
