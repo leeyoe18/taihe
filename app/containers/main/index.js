@@ -74,6 +74,7 @@ export default class App extends React.Component {
       token = await AsyncStorage.getItem(Conf.STORAGE_TOKEN);
     } catch (e) {
       ToastAndroid.show('请先登录', ToastAndroid.LONG);
+      this.goScreen();
       this.setState({
         center: { long: Conf.LONG, lat: Conf.LAT },
       });
@@ -86,6 +87,7 @@ export default class App extends React.Component {
       this.getMenus();
     } else {
       ToastAndroid.show('请先登录', ToastAndroid.LONG);
+      this.goScreen();
       this.setState({
         center: { long: Conf.LONG, lat: Conf.LAT },
       });

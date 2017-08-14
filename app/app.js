@@ -13,7 +13,7 @@ import Search from './containers/search';
 import Pano from './containers/pano';
 
 const App = StackNavigator({
-    Main: { screen: Main },
+    Home: { screen: Main },
     Detail: { screen: Detail },
     Web: { screen: Web },
     Login: { screen: Login },
