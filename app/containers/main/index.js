@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, Picker, Switch, RefreshControl, ToastAndroid, 
-  AsyncStorage, TextInput, Button, DeviceEventEmitter, TouchableOpacity, Image, WebView } from 'react-native';
+  AsyncStorage, TextInput, DeviceEventEmitter, TouchableOpacity, Image, WebView } from 'react-native';
 import {BdMap,  Panorama} from 'baidu-map-for-react-native';
 import Conf from '../../common/config';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Footer from './footer';
 import { List } from './list';
 import Menu from './menu';
+import  { Button } from 'antd-mobile';
 import { NavigationActions } from 'react-navigation';
 import BaiduMap from './map';
 import Table from '../../components/table';
@@ -302,6 +303,14 @@ export default class App extends React.Component {
   changeMapType = (bool) => {
     this.setState({
       isMap: bool
+    });
+  };
+
+  handleClick = (data) => {
+    const { navigate } = this.props.navigation;
+    navigate('Detail', {
+      path: data.id,
+      title: data.name
     });
   };
 
