@@ -148,13 +148,13 @@ export default class BaiduMapDemo extends Component {
                 const option = {
                     title: {
                         text: data.title,
-                        left: 16,
+                        left: 8,
                         top: 16
                     },
                     tooltip : this.getTooltip(data),
                     legend: {
-                        right: 16,
                         top: 48,
+                        left: 8,
                         data: this.getLegend(data)
                     },
                     grid: [{
@@ -170,7 +170,7 @@ export default class BaiduMapDemo extends Component {
                     <View style={styles.body} key={index}>
                         <Echarts
                             option={option}
-                            height={Dimensions.get('window').height - 150}
+                            height={Dimensions.get('window').height - 125}
                             width={Dimensions.get('window').width - 32}
                         />
                     </View>
