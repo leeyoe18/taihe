@@ -50,5 +50,5 @@ export default Conf = {
       textColor: '#999'
     },
   },
-  url: 'http://116.62.113.227:3000'
+  url: 'http://118.31.46.186:3000'
 };
