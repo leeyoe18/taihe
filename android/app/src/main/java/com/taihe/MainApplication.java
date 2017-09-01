@@ -11,7 +11,7 @@ import com.facebook.soloader.SoLoader;
 import org.jonglee.reactnative.baidumap.BaiduMapReactPackage;
 import org.jonglee.reactnative.baidumap.EventPackage;
 import org.jonglee.reactnative.stree.PanoramaReactPackage;
-
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
           new VectorIconsPackage(),
           new BaiduMapReactPackage(),
               new PanoramaReactPackage(),
-              new EventPackage()
+              new EventPackage(),
+              new RNDeviceInfo()
 
       );
     }

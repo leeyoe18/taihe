@@ -4,11 +4,12 @@ import { StyleSheet, Text, View, Dimensions, ScrollView, Picker, Switch, Refresh
 import {BdMap,  Panorama} from 'baidu-map-for-react-native';
 import Conf from '../../common/config';
 import Icon from 'react-native-vector-icons/EvilIcons';
-
+import Footer from './footer';
 import { List } from './list';
 import Menu from './menu';
 import { NavigationActions } from 'react-navigation';
 import BaiduMap from './map';
+import Table from '../../components/table';
 
 let tmpTitle = '';
 
@@ -160,14 +161,14 @@ export default class App extends React.Component {
           ToastAndroid.show('请求错误:' + e.message, ToastAndroid.SHORT);
         }
       });
-  }
+  };
 
-  selectMenu(type) {
+  selectMenu = (type) => {
     this.setState({selectType: type});
     this.getProjects(type);
-  }
+  };
 
-  listMenu() {
+  listMenu = () => {
     return this.state.menus.map((item) => { 
       let style = { fontWeight: item.type === this.state.selectType ? 'bold' : 'normal' };
       return (
@@ -179,9 +180,9 @@ export default class App extends React.Component {
         </View>
       )
     })
-  }
+  };
 
-  resize() {
+  resize = () => {
     const { height, width } = Dimensions.get('window');
     this.setState({
       deviceSize: {
@@ -191,41 +192,30 @@ export default class App extends React.Component {
     });
   }
 
-  listPickerItem() {
-    return this.state.menus.map((item) => { 
-      return (
+  listPickerItem = () => {
+    return this.state.menus.map(item =>
+      (
         <Picker.Item label={item.title} value={item.type} key={item.type} style={{  fontSize: 12  }} />
-      )
-    })
+      ))
   }
 
-  setDisplayModel(isMap) {
-    if (this.state.token) {
-      this.setState({
-        isMap: isMap
-      });
-    } else {
-      this.goScreen();
-    }
-  }
-
-  onRefresh() {
+  onRefresh = () => {
     this.setState({isRefreshing: true});
     setTimeout(() => {
       this.getProjects(this.state.selectType);
     }, 500);
-  }
+  };
 
-  goScreen(name, option) {
+  goScreen = (name, option) => {
     const { navigate } = this.props.navigation;
     if (this.state.token) {
       navigate(name, option);
     } else {
       navigate('Login', {title: '用户登录'});
     }
-  }
+  };
 
-  pressSearch() {
+  pressSearch = () => {
     const { navigate } = this.props.navigation;
     
     if (this.cacheData.rows && this.cacheData.rows.length) {
@@ -236,9 +226,9 @@ export default class App extends React.Component {
         // isSatellite: this.state.isSatellite
       });
     }
-  }
+  };
 
-  clearSearchResult() {
+  clearSearchResult = () => {
     const resetAction = NavigationActions.reset({
       index: 0,
       actions: [
@@ -250,9 +240,9 @@ export default class App extends React.Component {
     });
 
     this.props.navigation.dispatch(resetAction);
-  }
+  };
 
-  getPanoramaUrl(item) {
+  getPanoramaUrl = (item) => {
     fetch(`http://apis.map.qq.com/ws/coord/v1/translate?key=YJKBZ-EPGR5-XGDIA-QHAMV-CRH6T-N5FWI&locations=${item.lat},${item.long}&type=3`)
       .then((res) => res.json())
       .then((res) => {
@@ -292,14 +282,7 @@ export default class App extends React.Component {
     }, 1000);
   }
 
-  toDisplayVule(something) {
-    if (typeof something === 'boolean') {
-      return something ? '是' : '否';
-    }
-    return something;
-  }
-
-  goPanorama(item) {
+  goPanorama = (item) => {
     const { navigate } = this.props.navigation;
     const { params } = this.props.navigation.state;
 
@@ -307,18 +290,55 @@ export default class App extends React.Component {
     this.props.navigation.setParams({
       title: this.state.selectionProject.name + ' - 全景' ,
     });
-  }
+  };
 
-  closePanorama() {
+  closePanorama = () => {
     this.props.navigation.setParams({
       title: tmpTitle,
     });
     this.setState({ panoramaLeft: 999999 });
-  }
+  };
+
+  changeMapType = (bool) => {
+    this.setState({
+      isMap: bool
+    });
+  };
 
   render() {
     const { navigate } = this.props.navigation;
-
+    const columns = this.state.gridData.header.map(data => {
+      let render = null;
+      if(data.key === 'isAttention') {
+        render = (rowData) => {
+          return <Text style={rowData.isAttention? styles.green : ''}>{rowData.isAttention ? '是' : '否'}</Text>;
+        };
+      } else if(data.key === 'long' || data.key === 'lat') {
+        render = (rowData) => {
+          return <Text>{(rowData[data.key]).toFixed(4)}</Text>;
+        }
+      } else if(data.key === 'status') {
+        render = (rowData) => {
+          return <View style={styles['style' + rowData.status]} />;
+        }
+      }
+      return {
+        title: data.title,
+        dataIndex: data.key,
+        key: data.key,
+        render
+      };
+    });
+    columns.push({
+      title: 'Action',
+      key: 'Action',
+      isBtn: true,
+      render: (data) => (
+          <Button style={styles.btn} onClick={() => {this.handleClick(data)}}>
+            详情
+          </Button>
+      )
+    });
     return (
       <View style={styles.container} onLayout={ () => this.resize() }>
         <View style={{width: '100%', height: '100%', position: 'absolute', left: this.state.panoramaLeft, top: 0, zIndex: 99999}}>
@@ -357,100 +377,24 @@ export default class App extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-
         <View style={{ flex: 1 }}>
-          { this.state.isMap ?
-              <BaiduMap
-                  {...this.props}
-                  {...this.state}
-              />: <ScrollView
-                style={{ flex: 1 }}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.isRefreshing}
-                    onRefresh={() => this.onRefresh()}
-                    colors={['#ff0000', '#00ff00', '#0000ff','#3ad564']}
-                    progressBackgroundColor="#ffffff"
-                  />
-                }>
-            <List
-              selectItem={(item) => navigate('Web', { 
-                title: item.name,
-                url: `${Conf.url}/detail/${item.id}`
-              })}
-              header={this.state.gridData.header}
-              rows={this.state.gridData.rows} 
-             />
-          </ScrollView> }
+          {this.state.isMap ?
+            <BaiduMap
+                {...this.props}
+                {...this.state}
+            /> : <Table
+              columns={columns}
+              data={this.state.gridData.rows}
+              header={this.state.header}
+          />
+          }
         </View>
-
-        {this.state.selectionProject ? <View style={{ flex: 1,  backgroundColor: 'white' }}>
-          <View style={{ padding: 10, backgroundColor: Conf.BASE_COLOR }}>
-            <Icon name="chevron-down" color="white" style={{ fontSize: 30, textAlign: 'center' }} 
-              onPress={() => this.setState({selectionProject: null})}
-            />
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row', }}>
-            <View style={{ flex: 0.6, padding: 10, backgroundColor: 'white' }}>
-              { this.state.gridData.header.map((item) => (
-                <View style={{ flex: 1, flexDirection: 'row', marginBottom: 2 }} key={ item.key }>
-                  <Text style={{ color: '#999', flex: 0.5 }}>{ item.title }</Text>
-                  <Text style={{ color: '#000', flex: 0.5 }}>{ this.toDisplayVule(this.state.selectionProject[item.key]) }</Text>
-                </View>
-              )) }
-            </View>
-            <View style={{ flex: 0.4,  alignItems: 'center', justifyContent: 'center', }}>
-              <TouchableOpacity
-                style={{ width: '90%', height: '90%' }}
-                onPress={ () => !this.state.isPanoramaLoading && this.state.isPanoramaPass && this.goPanorama(this.state.selectionProject) }
-              >
-
-                <Image 
-                  style={{ flex: 1, backgroundColor: '#DDD' }} 
-                  source={{ uri: this.state.panoramaImageUrl }}
-                  onLoadStart={ () => this.setState({ isPanoramaLoading: true }) }
-                  onLoadEnd={ () => this.setState({ isPanoramaLoading: false }) } 
-                  onError={ () => this.setState({ isPanoramaPass: false }) }
-                  onLoad={ () => this.setState({ isPanoramaPass: true }) }
-                />
-                
-                { !this.state.isPanoramaLoading && this.state.isPanoramaPass && <Button title="进入全景图" onPress={ () => this.goPanorama(this.state.selectionProject) } /> }
-                { !this.state.isPanoramaLoading && !this.state.isPanoramaPass && <Button disabled={true} title="无全景图" onPress={ () => this.goPanorama(this.state.selectionProject) } /> }
-                { this.state.isPanoramaLoading && <Button disabled={true} title="加载全景中..." onPress={ () => this.goPanorama(this.state.selectionProject) } /> }
-              </TouchableOpacity>
-            </View>
-          </View>
-          <TouchableOpacity style={{ height: 50, borderTopColor: '#CCC', borderTopWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}
-            onPress={ () => navigate('Web', { 
-              title: this.state.selectionProject.name,
-              url: `http://116.62.113.227:3000/detail/${this.state.selectionProject.id}`
-            })} 
-          >
-            <Text style={{ color: Conf.BASE_COLOR, textAlign: 'right', fontSize: 20 }}>
-              查看详情
-              <Icon name="chevron-right" color={Conf.BASE_COLOR} style={{ fontSize: 20 }} />
-            </Text>
-          </TouchableOpacity>
-        </View> : <View style={styles.menu}>
-          <View style={{ width: 100, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRightColor: '#CCC', borderRightWidth: 1 }}>
-            <Icon name="navicon" color={Conf.BASE_COLOR} style={{ fontSize: 20 }} onPress={() => this.setDisplayModel(false)} />                
-            <Switch
-              disabled={!this.state.token}
-              onValueChange={(value) => this.setDisplayModel(value)} value={this.state.isMap}
-             />
-            <Icon name="location" color={Conf.BASE_COLOR} style={{ fontSize: 20 }} onPress={() => this.setDisplayModel(true)} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Menu
-              onChart={() => this.goScreen('Web', { 
-                title: '项目建设分析',
-                url: `http://116.62.113.227:3000/charts`
-              })}
-              onUser={() => this.goScreen('User', { title: '用户中心' })}
-              onLogin={() => this.goScreen('Login', { title: '系统登陆' })}
-            />
-          </View>
-        </View>}
+        <Footer
+            {...this.state}
+            {...this.props}
+            changeMapType={this.changeMapType}
+            goScreen={this.goScreen}
+        />
       </View>
     );
   }

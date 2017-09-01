@@ -9,9 +9,9 @@ class List extends Component {
     header: React.PropTypes.array,
     rows: React.PropTypes.array,
   
-  }
+  };
   
-  toDisplayVule(key, value) {
+  toDisplayVule = (key, value) => {
     if (typeof value === 'boolean') {
       return value ? '是' : '否';
     }
@@ -21,9 +21,9 @@ class List extends Component {
     }
 
     return value;
-  }
+  };
 
-  listItems() {
+  listItems = () => {
     const {header, rows} = this.props;
     
     return rows.map((row, i) => (
@@ -45,7 +45,7 @@ class List extends Component {
         </TouchableOpacity>
       </View>
     ));
-  }
+  };
 
   render() {
     return  (
