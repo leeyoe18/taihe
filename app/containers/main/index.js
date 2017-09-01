@@ -106,7 +106,7 @@ export default class App extends React.Component {
         });
 
         if (Array.isArray(res) && res.length) {
-          this.setState({selectType: res[0].type})
+          this.setState({selectType: res[0].type});
           this.getProjects(res[0].type);
         } else {
           this.setState({
@@ -311,7 +311,8 @@ export default class App extends React.Component {
     const { navigate } = this.props.navigation;
     navigate('Detail', {
       path: data.id,
-      title: data.name
+      title: data.name,
+      headers: this.headers
     });
   };
 
@@ -387,6 +388,7 @@ export default class App extends React.Component {
             {...this.props}
             changeMapType={this.changeMapType}
             goScreen={this.goScreen}
+            headers={this.headers}
         />
       </View>
     );
@@ -399,7 +401,7 @@ const styles = StyleSheet.create({
     margin: 0,
     display: 'flex',
     position: 'relative',
-    flex: 1, 
+    flex: 1,
   },
   menu: {
     flexDirection: 'row',

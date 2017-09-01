@@ -32,13 +32,16 @@ export default class BaiduMapDemo extends Component {
     });
 
     componentDidMount() {
-        get('getAnalysis', null, (data) => {
-            if(data.pass) {
-                this.setState({
-                    data: data.data
-                });
-            }
-        });
+        const { params } = this.props.navigation.state;
+        fetch(`${Conf.url}/api/getAnalysis`, { headers: params.headers })
+            .then(response => response.json())
+            .then((res) => {
+                if(res.pass) {
+                    this.setState({
+                        data: res.data
+                    });
+                }
+            });
     }
 
     isPie = (data) => {
@@ -69,13 +72,16 @@ export default class BaiduMapDemo extends Component {
         ];
     };
 
-    getColor = (index) => {
+    getColor = (data, index) => {
+        if(data && data.header && data.header[0].color) {
+            return data.header.map(item => item.color);
+        }
         switch(index) {
             case 0: return ['#9966FF', '#00CCCC'];
             case 1: return ['#66FF66', '#FF6633'];
             case 2: return ['#66FF66', '#FF6633'];
             case 3: return ['#3399FF', '#66FF66', '#FF6633'];
-            case 4: return ['#3399FF', '#00CCFF'];
+            case 4: return ['red', 'yellow', 'green', 'blue', 'gray'];
             case 5: return ['#99FFFF', '#00CCFF', '#3399FF', '#9966FF'];
             default: return ['#99FFFF', '#00CCFF', '#3399FF', '#9966FF'];
         }
@@ -148,19 +154,23 @@ export default class BaiduMapDemo extends Component {
                     tooltip : this.getTooltip(data),
                     legend: {
                         right: 16,
-                        top: 16,
+                        top: 48,
                         data: this.getLegend(data)
                     },
+                    grid: [{
+                        left: 50,
+                        top: 100
+                    }],
                     xAxis : this.getX(data),
                     yAxis : this.getY(data),
-                    color: this.getColor(index),
+                    color: this.getColor(data, index),
                     series : this.getSeries(data)
                 };
                 return (
                     <View style={styles.body} key={index}>
                         <Echarts
                             option={option}
-                            height={Dimensions.get('window').height - 200}
+                            height={Dimensions.get('window').height - 150}
                             width={Dimensions.get('window').width - 32}
                         />
                     </View>
@@ -176,7 +186,6 @@ export default class BaiduMapDemo extends Component {
                 <Carousel
                     style={styles.container}
                     autoplay={false}
-                    swipeSpeed={35}
                 >
                     {this.getCharts()}
                 </Carousel>
@@ -198,6 +207,6 @@ const styles = StyleSheet.create({
         margin: 0,
         display: 'flex',
         position: 'relative',
-        flex: 1,
+        flex: 1
     }
 });

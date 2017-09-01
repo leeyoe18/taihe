@@ -35,7 +35,8 @@ class Footer extends Component {
                 <View style={{ flex: 1 }}>
                     <Menu
                         onChart={() => this.props.goScreen('Analysis', {
-                            title: '项目建设分析'
+                            title: '项目建设分析',
+                            headers: this.props.headers
                         })}
                         onUser={() => this.props.goScreen('User', { title: '用户中心' })}
                         onLogin={() => this.props.goScreen('Login', { title: '系统登陆' })}
