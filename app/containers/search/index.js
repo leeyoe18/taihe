@@ -17,7 +17,7 @@ export default class Search extends Component {
     title: navigation.state.params.title,
     headerStyle:  Conf.NAV_HEADER_STYLE,
     headerTitleStyle: Conf.NAV_HEADER_TITLE_STYLE
-  })
+  });
 
   search(value) {
     const { navigate } = this.props.navigation;

@@ -11,6 +11,7 @@ import  { Button } from 'antd-mobile';
 import { NavigationActions } from 'react-navigation';
 import BaiduMap from './map';
 import Table from '../../components/table';
+import Header from './header';
 
 let tmpTitle = '';
 
@@ -191,14 +192,14 @@ export default class App extends React.Component {
         width: width
       }
     });
-  }
+  };
 
   listPickerItem = () => {
     return this.state.menus.map(item =>
       (
         <Picker.Item label={item.title} value={item.type} key={item.type} style={{  fontSize: 12  }} />
       ))
-  }
+  };
 
   onRefresh = () => {
     this.setState({isRefreshing: true});
@@ -261,7 +262,7 @@ export default class App extends React.Component {
       .catch((e) => {
 
       });
-  }
+  };
 
   componentWillUnmount() {
     DeviceEventEmitter.removeAllListeners('selectedMarker');
@@ -361,31 +362,14 @@ export default class App extends React.Component {
             color="#999" style={{ fontSize: 50, position: 'absolute', right: 10, top: 10, zIndex: 9999 }}
           />
         </View>
-        <View style={styles.headers}>
-          <View style={{flex:.4, height: '100%'}}>
-            <Picker
-              enabled={!!this.state.token}
-              style={{ color: 'white', alignItems:'center', alignSelf: 'stretch' }}
-              selectedValue={this.state.selectType}
-              onValueChange={(itemValue, itemIndex) => this.selectMenu(itemValue)}
-            >
-              { this.listPickerItem() }
-            </Picker>
-          </View>
-          <View style={{flex: 0.6, alignItems: 'center', justifyContent: 'center', }}>
-            <TouchableOpacity style={styles.searchView} onPress={() => this.state.token && this.pressSearch()} >
-              <Icon name="search" color="#999" style={{ fontSize: 30 }} />
-              <Text 
-                style={[styles.searchText, { color: this.state.searchValue ? Conf.BASE_COLOR : '#999' }]}
-              >
-                { this.state.searchValue ? this.state.searchValue : '搜索...' }
-              </Text>
-
-              <Icon onPress={ () => this.clearSearchResult() } name="close" color="red" style={{ fontSize: 30, opacity: this.state.searchValue ? 1 : 0 }} />
-              
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Header
+            {...this.state}
+            {...this.props}
+            clearSearchResult={this.clearSearchResult}
+            pressSearch={this.pressSearch}
+            listPickerItem={this.listPickerItem}
+            selectMenu={this.selectMenu}
+        />
         <View style={{ flex: 1 }}>
           {this.state.isMap ?
             <BaiduMap
@@ -440,17 +424,6 @@ const styles = StyleSheet.create({
     // flex: 10,
     // height: height - menuHeight * 1.8,
     width: '100%',
-  },
-  headers: {
-    height: Conf.HEADER_HEIGHT,
-    backgroundColor: Conf.BASE_COLOR,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  headersText: {
-    textAlign: 'center',
-    color: 'white',
-    margin: 10,
   },
   tipView: {
     alignItems: 'center',

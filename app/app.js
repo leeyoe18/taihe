@@ -11,6 +11,7 @@ import User from './containers/user';
 import Login from './containers/login';
 import Search from './containers/search';
 import Pano from './containers/pano';
+import Analysis from './containers/analysis';
 
 const App = StackNavigator({
     Home: { screen: Main },
@@ -20,6 +21,7 @@ const App = StackNavigator({
     User: { screen: User },
     Search: { screen: Search },
     Pano: { screen: Pano },
+    Analysis: { screen: Analysis}
 });
 
 export default App;
