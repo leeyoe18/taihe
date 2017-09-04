@@ -36,15 +36,16 @@ export default class Detail extends Component {
 
   componentDidMount() {
     Toast.loading('Loading...', 0);
-    const { navigate, state } = this.props.navigation;
-    get('getProject/' + state.params.path, null, (data) => {
-      Toast.hide();
-      if(data.pass) {
-        this.setState({
-          data: data.data
+    const { params } = this.props.navigation.state;
+    fetch(`${Conf.url}/api/getProject／${params.path}`, { headers: params.headers })
+        .then(response => response.json())
+        .then((res) => {
+          if(res.pass) {
+            this.setState({
+              data: res.data
+            });
+          }
         });
-      }
-    });
   }
 
   render() {
