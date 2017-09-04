@@ -40,6 +40,7 @@ export default class Detail extends Component {
     fetch(`${Conf.url}/api/getProject／${params.path}`, { headers: params.headers })
         .then(response => response.json())
         .then((res) => {
+          Toast.hide();
           if(res.pass) {
             this.setState({
               data: res.data

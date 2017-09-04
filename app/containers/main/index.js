@@ -1,12 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Dimensions, ScrollView, Picker, Switch, RefreshControl, ToastAndroid, 
   AsyncStorage, TextInput, DeviceEventEmitter, TouchableOpacity, Image, WebView } from 'react-native';
-import {BdMap,  Panorama} from 'baidu-map-for-react-native';
 import Conf from '../../common/config';
-import Icon from 'react-native-vector-icons/EvilIcons';
 import Footer from './footer';
-import { List } from './list';
-import Menu from './menu';
 import  { Button } from 'antd-mobile';
 import { NavigationActions } from 'react-navigation';
 import BaiduMap from './map';
@@ -284,23 +280,6 @@ export default class App extends React.Component {
     }, 1000);
   }
 
-  goPanorama = (item) => {
-    const { navigate } = this.props.navigation;
-    const { params } = this.props.navigation.state;
-
-    this.setState({ panoramaLeft: 0 });
-    this.props.navigation.setParams({
-      title: this.state.selectionProject.name + ' - 全景' ,
-    });
-  };
-
-  closePanorama = () => {
-    this.props.navigation.setParams({
-      title: tmpTitle,
-    });
-    this.setState({ panoramaLeft: 999999 });
-  };
-
   changeMapType = (bool) => {
     this.setState({
       isMap: bool
@@ -352,17 +331,6 @@ export default class App extends React.Component {
     });
     return (
       <View style={styles.container} onLayout={ () => this.resize() }>
-        <View style={{width: '100%', height: '100%', position: 'absolute', left: this.state.panoramaLeft, top: 0, zIndex: 99999}}>
-          <Panorama
-            style={{ flex: 1 }}
-            location={{ long: this.state.panoramaLong, lat: this.state.panoramaLat }}
-          />
-          <Icon
-            onPress={ () => this.closePanorama() }
-            name="close"
-            color="#999" style={{ fontSize: 50, position: 'absolute', right: 10, top: 10, zIndex: 9999 }}
-          />
-        </View>
         <Header
             {...this.state}
             {...this.props}
@@ -373,10 +341,11 @@ export default class App extends React.Component {
         />
         <View style={{ flex: 1 }}>
           {this.state.isMap ?
-            <BaiduMap
-                {...this.props}
-                {...this.state}
-            /> : <Table
+              <BaiduMap
+                  {...this.state}
+                  {...this.props}
+              />
+              : <Table
               columns={columns}
               data={this.state.gridData.rows}
               header={this.state.header}

@@ -14,6 +14,7 @@ import org.jonglee.reactnative.stree.PanoramaReactPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import java.util.Arrays;
 import java.util.List;
+import cn.qiuxiang.react.amap3d.AMap3DPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 // public class MainApplication extends NavigationApplication implements ReactApplication {
@@ -35,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
           new BaiduMapReactPackage(),
               new PanoramaReactPackage(),
               new EventPackage(),
+              new AMap3DPackage(),
               new RNDeviceInfo()
 
       );
